@@ -344,10 +344,10 @@
                     <span class="sr-only">Toggle theme</span>
                 </button>
 
-                <!-- Github/Repo Link -->
-                <a href="#"
+                <!-- Discord Link -->
+                <a href="https://discord.com/invite/6CSxhCydMN" target="_blank" rel="noopener noreferrer"
                     class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring hover:bg-accent hover:text-accent-foreground h-9 w-9">
-                    <i data-lucide="github" class="h-5 w-5"></i>
+                    <i data-lucide="gamepad-2" class="h-5 w-5"></i>
                 </a>
             </div>
         </div>
@@ -411,6 +411,37 @@
             </div>
         </aside>
 
+    </div>
+
+    <!-- 
+      SEARCH MODAL 
+    -->
+    <div id="search-modal" role="dialog" aria-modal="true"
+        class="fixed inset-0 z-50 flex items-start justify-center pt-[10vh] hidden">
+        <!-- Backdrop -->
+        <div class="fixed inset-0 bg-background/80 backdrop-blur-sm transition-opacity" id="search-backdrop"></div>
+
+        <!-- Dialog -->
+        <div
+            class="relative w-full max-w-lg overflow-hidden rounded-xl border border-border bg-popover text-popover-foreground shadow-2xl transition-all scale-100 opacity-100">
+            <div class="flex items-center border-b px-3">
+                <i data-lucide="search" class="mr-2 h-4 w-4 shrink-0 opacity-50"></i>
+                <input id="search-input"
+                    class="flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
+                    placeholder="Type a command or search..." autocomplete="off">
+                <kbd
+                    class="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
+                    <span class="text-xs">ESC</span>
+                </kbd>
+            </div>
+            <div class="max-h-[300px] overflow-y-auto p-2" id="search-results">
+                <!-- Empty State -->
+                <p class="p-4 text-center text-sm text-muted-foreground" id="search-empty">
+                    No results found.
+                </p>
+                <!-- Results injected here -->
+            </div>
+        </div>
     </div>
 
     <!-- Footer -->
@@ -677,6 +708,127 @@ Once configured:
             }, observerOptions);
 
             headers.forEach(header => observer.observe(header));
+
+            // 7. Search Logic
+            const searchIndex = [];
+            // Indexing logic: Walk through headers and p tags
+            // We group text under the preceding header
+            let currentSection = { title: "Introduction", id: "introduction", content: "" };
+
+            // Helper to clean text
+            const cleanText = (txt) => txt.replace(/\s+/g, ' ').trim();
+
+            Array.from(contentEl.children).forEach(child => {
+                if (['H1', 'H2', 'H3'].includes(child.tagName)) {
+                    // Push previous section
+                    if (currentSection.content) {
+                        searchIndex.push({ ...currentSection });
+                    }
+                    // Start new section
+                    currentSection = {
+                        title: child.textContent,
+                        id: child.id,
+                        content: ""
+                    };
+                } else {
+                    currentSection.content += " " + cleanText(child.textContent);
+                }
+            });
+            // Push last
+            if (currentSection.content) searchIndex.push({ ...currentSection });
+
+            // Search Modal UI
+            const searchModal = document.getElementById('search-modal');
+            const searchInput = document.getElementById('search-input');
+            const searchResults = document.getElementById('search-results');
+            const searchEmpty = document.getElementById('search-empty');
+            const searchBackdrop = document.getElementById('search-backdrop');
+            // Allow triggering from existing buttons if any - we'll add a specific trigger to the header later if needed
+            // For now, Cmd+K is primary
+
+            function toggleSearch(show) {
+                if (show) {
+                    searchModal.classList.remove('hidden');
+                    setTimeout(() => searchInput.focus(), 50);
+                } else {
+                    searchModal.classList.add('hidden');
+                    searchInput.value = '';
+                    renderResults([]);
+                }
+            }
+
+            // Keyboard Shortcuts
+            document.addEventListener('keydown', (e) => {
+                if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                    e.preventDefault();
+                    toggleSearch(!searchModal.classList.contains('hidden'));
+                }
+                if (e.key === 'Escape' && !searchModal.classList.contains('hidden')) {
+                    toggleSearch(false);
+                }
+            });
+
+            // Close actions
+            searchBackdrop.addEventListener('click', () => toggleSearch(false));
+
+            // Filtering
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase();
+                if (!query) {
+                    renderResults([]);
+                    return;
+                }
+                const results = searchIndex.filter(item =>
+                    item.title.toLowerCase().includes(query) ||
+                    item.content.toLowerCase().includes(query)
+                );
+                renderResults(results, query);
+            });
+
+            function renderResults(results, query) {
+                if (results.length === 0) {
+                    searchResults.innerHTML = '';
+                    if (query) searchResults.appendChild(searchEmpty);
+                    else searchEmpty.remove();
+                    return;
+                }
+
+                searchResults.innerHTML = '';
+                results.forEach(res => {
+                    const div = document.createElement('div');
+                    div.className = "flex cursor-pointer select-none items-center rounded-sm px-2 py-3 outline-none hover:bg-accent hover:text-accent-foreground";
+                    div.innerHTML = `
+                        <i data-lucide="hash" class="mr-2 h-4 w-4"></i>
+                        <div class="flex-1">
+                            <div class="text-sm font-medium leading-none">${res.title}</div>
+                            <div class="text-xs text-muted-foreground mt-1 line-clamp-1">${getHighlightSnippet(res.content, query)}</div>
+                        </div>
+                    `;
+                    div.addEventListener('click', () => {
+                        toggleSearch(false);
+                        const target = document.getElementById(res.id);
+                        if (target) target.scrollIntoView({ behavior: 'smooth' });
+                    });
+                    searchResults.appendChild(div);
+                });
+                lucide.createIcons();
+            }
+
+            function getHighlightSnippet(content, query) {
+                if (!query) return content.substring(0, 100);
+                const idx = content.toLowerCase().indexOf(query);
+                if (idx === -1) return content.substring(0, 100);
+                const start = Math.max(0, idx - 20);
+                const end = Math.min(content.length, idx + 80);
+                return "..." + content.substring(start, end) + "...";
+            }
+
+            // Add Click Listener to the "Search documentation..." button in the header
+            const headerSearchBtn = document.querySelector('button.w-full.justify-start.text-sm.text-muted-foreground');
+            if (headerSearchBtn) {
+                headerSearchBtn.addEventListener('click', () => toggleSearch(true));
+            }
+
         });
 
         // --- Dark Mode Logic (Preserved) ---
