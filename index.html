@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reglia Mod Wiki | Documentation</title>
+
+    <!-- Fonts: Inter for that clean, professional look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS (CDN for prototype usage) - Including Typography Plugin -->
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+
+    <!-- Lucide Icons (Standard for ShadCN) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Configuration for Tailwind to match ShadCN variables -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'Menlo', 'Monaco', 'Courier New', 'monospace'],
+                    },
+                    colors: {
+                        border: "hsl(var(--border))",
+                        input: "hsl(var(--input))",
+                        ring: "hsl(var(--ring))",
+                        background: "hsl(var(--background))",
+                        foreground: "hsl(var(--foreground))",
+                        primary: {
+                            DEFAULT: "hsl(var(--primary))",
+                            foreground: "hsl(var(--primary-foreground))",
+                        },
+                        secondary: {
+                            DEFAULT: "hsl(var(--secondary))",
+                            foreground: "hsl(var(--secondary-foreground))",
+                        },
+                        destructive: {
+                            DEFAULT: "hsl(var(--destructive))",
+                            foreground: "hsl(var(--destructive-foreground))",
+                        },
+                        muted: {
+                            DEFAULT: "hsl(var(--muted))",
+                            foreground: "hsl(var(--muted-foreground))",
+                        },
+                        accent: {
+                            DEFAULT: "hsl(var(--accent))",
+                            foreground: "hsl(var(--accent-foreground))",
+                        },
+                        popover: {
+                            DEFAULT: "hsl(var(--popover))",
+                            foreground: "hsl(var(--popover-foreground))",
+                        },
+                        card: {
+                            DEFAULT: "hsl(var(--card))",
+                            foreground: "hsl(var(--card-foreground))",
+                        },
+                    },
+                    borderRadius: {
+                        lg: "var(--radius)",
+                        md: "calc(var(--radius) - 2px)",
+                        sm: "calc(var(--radius) - 4px)",
+                    },
+                    typography: ({ theme }) => ({
+                        DEFAULT: {
+                            css: {
+                                '--tw-prose-body': 'hsl(var(--foreground))',
+                                '--tw-prose-headings': 'hsl(var(--foreground))',
+                                '--tw-prose-lead': 'hsl(var(--muted-foreground))',
+                                '--tw-prose-links': 'hsl(var(--primary))',
+                                '--tw-prose-bold': 'hsl(var(--foreground))',
+                                '--tw-prose-counters': 'hsl(var(--muted-foreground))',
+                                '--tw-prose-bullets': 'hsl(var(--muted-foreground))',
+                                '--tw-prose-hr': 'hsl(var(--border))',
+                                '--tw-prose-quotes': 'hsl(var(--foreground))',
+                                '--tw-prose-quote-borders': 'hsl(var(--border))',
+                                '--tw-prose-captions': 'hsl(var(--muted-foreground))',
+                                '--tw-prose-code': 'hsl(var(--foreground))',
+                                '--tw-prose-pre-code': 'hsl(var(--foreground))',
+                                '--tw-prose-pre-bg': 'hsl(var(--muted))', // darker bg for code blocks
+                                '--tw-prose-th-borders': 'hsl(var(--border))',
+                                '--tw-prose-td-borders': 'hsl(var(--border))',
+                                '--tw-prose-invert-body': 'hsl(var(--foreground))',
+                                '--tw-prose-invert-headings': 'hsl(var(--foreground))',
+                                '--tw-prose-invert-lead': 'hsl(var(--muted-foreground))',
+                                '--tw-prose-invert-links': 'hsl(var(--primary))',
+                                '--tw-prose-invert-bold': 'hsl(var(--foreground))',
+                                '--tw-prose-invert-counters': 'hsl(var(--muted-foreground))',
+                                '--tw-prose-invert-bullets': 'hsl(var(--muted-foreground))',
+                                '--tw-prose-invert-hr': 'hsl(var(--border))',
+                                '--tw-prose-invert-quotes': 'hsl(var(--foreground))',
+                                '--tw-prose-invert-quote-borders': 'hsl(var(--border))',
+                                '--tw-prose-invert-captions': 'hsl(var(--muted-foreground))',
+                                '--tw-prose-invert-code': 'hsl(var(--foreground))',
+                                '--tw-prose-invert-pre-code': 'hsl(var(--foreground))',
+                                '--tw-prose-invert-pre-bg': 'hsl(var(--muted))',
+                                '--tw-prose-invert-th-borders': 'hsl(var(--border))',
+                                '--tw-prose-invert-td-borders': 'hsl(var(--border))',
+                                maxWidth: 'none',
+                                p: {
+                                    marginTop: '1.25em',
+                                    marginBottom: '1.25em',
+                                    lineHeight: '1.75',
+                                },
+                                'h1, h2, h3': {
+                                    marginTop: '2em',
+                                    letterSpacing: '-0.025em',
+                                    fontWeight: '700',
+                                },
+                                h1: {
+                                    fontSize: '2.5rem',
+                                    lineHeight: '1.1',
+                                },
+                                h2: {
+                                    fontSize: '1.75rem',
+                                    borderBottom: '1px solid hsl(var(--border))',
+                                    paddingBottom: '0.5em',
+                                },
+                                'code::before': { content: '""' },
+                                'code::after': { content: '""' },
+                                code: {
+                                    backgroundColor: 'hsl(var(--muted))',
+                                    padding: '0.2em 0.4em',
+                                    borderRadius: '0.25rem',
+                                    fontWeight: '500',
+                                    fontSize: '0.875em',
+                                },
+                                pre: {
+                                    backgroundColor: '#1e1e20', // Custom dark bg for code
+                                    color: '#e4e4e7',
+                                    borderRadius: '0.5rem',
+                                    border: '1px solid hsl(var(--border))',
+                                    padding: '1rem',
+                                },
+                                'pre code': {
+                                    backgroundColor: 'transparent',
+                                    padding: '0',
+                                    fontSize: '0.9em',
+                                    color: 'inherit',
+                                },
+                                table: {
+                                    width: '100%',
+                                    marginTop: '2em',
+                                    marginBottom: '2em',
+                                    borderCollapse: 'separate',
+                                    borderSpacing: '0',
+                                    borderRadius: '0.5rem',
+                                    border: '1px solid hsl(var(--border))',
+                                    overflow: 'hidden',
+                                },
+                                thead: {
+                                    backgroundColor: 'hsl(var(--muted) / 0.5)',
+                                    color: 'hsl(var(--foreground))',
+                                },
+                                'thead th': {
+                                    borderBottom: '1px solid hsl(var(--border))',
+                                    padding: '0.75rem 1rem',
+                                    textAlign: 'left',
+                                },
+                                'tbody td': {
+                                    borderBottom: '1px solid hsl(var(--border))',
+                                    padding: '0.75rem 1rem',
+                                },
+                                'tbody tr:last-child td': {
+                                    borderBottom: 'none',
+                                },
+                            },
+                        },
+                    }),
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* CSS Variables - Mimicking ShadCN Default Theme */
+        :root {
+            --background: 0 0% 100%;
+            --foreground: 240 10% 3.9%;
+            --card: 0 0% 100%;
+            --card-foreground: 240 10% 3.9%;
+            --popover: 0 0% 100%;
+            --popover-foreground: 240 10% 3.9%;
+            --primary: 240 5.9% 10%;
+            --primary-foreground: 0 0% 98%;
+            --secondary: 240 4.8% 95.9%;
+            --secondary-foreground: 240 5.9% 10%;
+            --muted: 240 4.8% 95.9%;
+            --muted-foreground: 240 3.8% 46.1%;
+            --accent: 240 4.8% 95.9%;
+            --accent-foreground: 240 5.9% 10%;
+            --destructive: 0 84.2% 60.2%;
+            --destructive-foreground: 0 0% 98%;
+            --border: 240 5.9% 90%;
+            --input: 240 5.9% 90%;
+            --ring: 240 5.9% 10%;
+            --radius: 0.75rem;
+            /* iOS-like larger radius */
+        }
+
+        .dark {
+            --background: 240 10% 3.9%;
+            --foreground: 0 0% 98%;
+            --card: 240 10% 3.9%;
+            --card-foreground: 0 0% 98%;
+            --popover: 240 10% 3.9%;
+            --popover-foreground: 0 0% 98%;
+            --primary: 0 0% 98%;
+            --primary-foreground: 240 5.9% 10%;
+            --secondary: 240 3.7% 15.9%;
+            --secondary-foreground: 0 0% 98%;
+            --muted: 240 3.7% 15.9%;
+            --muted-foreground: 240 5% 64.9%;
+            --accent: 240 3.7% 15.9%;
+            --accent-foreground: 0 0% 98%;
+            --destructive: 0 62.8% 30.6%;
+            --destructive-foreground: 0 0% 98%;
+            --border: 240 3.7% 15.9%;
+            --input: 240 3.7% 15.9%;
+            --ring: 240 4.9% 83.9%;
+        }
+
+        /* iOS-like smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Custom Scrollbar for sleek feel */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: hsl(var(--muted-foreground) / 0.3);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: hsl(var(--muted-foreground) / 0.5);
+        }
+
+        /* Utility for shimmer loading effect (Optimization visualization) */
+        .shimmer {
+            position: relative;
+            overflow: hidden;
+            background-color: hsl(var(--muted));
+        }
+
+        .shimmer::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            transform: translateX(-100%);
+            background-image: linear-gradient(90deg,
+                    rgba(255, 255, 255, 0) 0,
+                    rgba(255, 255, 255, 0.05) 20%,
+                    rgba(255, 255, 255, 0.1) 60%,
+                    rgba(255, 255, 255, 0));
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        /* Hide elements initially for skeleton simulation */
+        .skeleton-hidden {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+
+        .loaded .skeleton-hidden {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body class="bg-background text-foreground antialiased min-h-screen flex flex-col transition-colors duration-300">
+
+    <!-- 
+      HEADER 
+      Fixed at top with glassmorphism (backdrop-blur)
+    -->
+    <header
+        class="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
+        <div class="container mx-auto flex h-14 max-w-screen-2xl items-center px-4 md:px-8">
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn"
+                class="mr-4 p-2 md:hidden text-muted-foreground hover:text-foreground transition-colors">
+                <i data-lucide="menu" class="w-5 h-5"></i>
+            </button>
+
+            <!-- Logo Area -->
+            <div class="mr-4 flex items-center gap-2 font-bold text-lg tracking-tight">
+                <div
+                    class="w-8 h-8 bg-primary text-primary-foreground rounded-lg flex items-center justify-center shadow-sm">
+                    <i data-lucide="box" class="w-5 h-5"></i>
+                </div>
+                <span>Reglia<span class="text-muted-foreground font-normal">Docs</span></span>
+            </div>
+
+            <!-- Search Bar (Desktop) - Simulates Cmd+K -->
+            <div class="hidden md:flex flex-1 items-center justify-center">
+                <button
+                    class="relative w-full max-w-sm h-9 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors text-left text-muted-foreground hover:bg-accent/50 hover:text-accent-foreground focus:outline-none focus:ring-1 focus:ring-ring">
+                    <span class="inline-flex items-center gap-2">
+                        <i data-lucide="search" class="w-4 h-4 opacity-50"></i>
+                        Search documentation...
+                        <kbd
+                            class="pointer-events-none ml-auto inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
+                            <span class="text-xs">⌘</span>K
+                        </kbd>
+                    </span>
+                </button>
+            </div>
+
+            <!-- Right Actions -->
+            <div class="ml-auto flex items-center space-x-2">
+                <!-- Theme Toggle -->
+                <button id="theme-toggle"
+                    class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9">
+                    <i data-lucide="sun"
+                        class="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"></i>
+                    <i data-lucide="moon"
+                        class="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"></i>
+                    <span class="sr-only">Toggle theme</span>
+                </button>
+
+                <!-- Github/Repo Link -->
+                <a href="#"
+                    class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring hover:bg-accent hover:text-accent-foreground h-9 w-9">
+                    <i data-lucide="github" class="h-5 w-5"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container flex-1 max-w-screen-2xl mx-auto w-full flex">
+
+        <!-- 
+          SIDEBAR NAVIGATION 
+          Dynamic content will be injected here
+        -->
+        <aside id="sidebar"
+            class="fixed inset-y-0 left-0 z-40 w-64 border-r border-border bg-background/95 backdrop-blur pt-16 transform -translate-x-full md:relative md:translate-x-0 md:block transition-transform duration-200 ease-in-out md:pt-0">
+            <div class="h-full overflow-y-auto py-6 pr-2 pl-4" id="sidebar-nav">
+                <!-- Generated Links will go here -->
+            </div>
+        </aside>
+
+        <!-- Overlay for mobile sidebar -->
+        <div id="sidebar-overlay"
+            class="fixed inset-0 z-30 bg-black/50 backdrop-blur-sm hidden md:hidden opacity-0 transition-opacity duration-200">
+        </div>
+
+        <!-- 
+          MAIN CONTENT AREA 
+        -->
+        <main class="flex-1 min-w-0 py-8 md:py-12 px-4 md:px-8">
+            <div class="mx-auto max-w-4xl">
+
+                <!-- Breadcrumbs -->
+                <nav class="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
+                    <a href="#" class="hover:text-foreground transition-colors">Docs</a>
+                    <i data-lucide="chevron-right" class="h-4 w-4"></i>
+                    <span class="text-foreground font-medium">Guide</span>
+                </nav>
+
+                <!-- Skeleton Loader (Simulated) -->
+                <div id="skeleton-loader" class="space-y-4">
+                    <div class="h-8 w-3/4 shimmer rounded-lg"></div>
+                    <div class="h-4 w-full shimmer rounded-md"></div>
+                    <div class="h-4 w-5/6 shimmer rounded-md"></div>
+                    <div class="h-64 w-full shimmer rounded-xl mt-8"></div>
+                </div>
+
+                <!-- Actual Content -->
+                <div id="main-content" class="skeleton-hidden prose prose-zinc dark:prose-invert max-w-none">
+                    <!-- Markdown content will be rendered here -->
+                </div>
+            </div>
+        </main>
+
+        <!-- 
+          RIGHT TABLE OF CONTENTS (TOC)
+        -->
+        <aside class="hidden xl:block w-64 border-l border-border pl-8 py-12">
+            <div class="sticky top-20 space-y-4">
+                <p class="font-medium text-sm">On This Page</p>
+                <ul id="toc-list" class="m-0 list-none space-y-2 pl-0 text-sm text-muted-foreground">
+                    <!-- TOC Generated here -->
+                </ul>
+            </div>
+        </aside>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-border py-6 md:py-0">
+        <div class="container flex h-14 max-w-screen-2xl items-center justify-between mx-auto px-4 md:px-8">
+            <p class="text-xs text-muted-foreground text-left">
+                Built for <span class="font-semibold text-foreground">Reglia</span>.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Marked JS -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- Interactions Script -->
+    <script>
+        // --- Guide Content Embedded ---
+        const guideMarkdown = `
+# Reglia User Guide
+
+Welcome to the official guide for **Reglia**, a seamless Discord Bridge mod for Minecraft (NeoForge 1.21.1) that brings your two worlds together with support for inline GIF previews!
+
+## Installation
+
+1.  **Prerequisites**: Ensure you have **Minecraft 1.21.1** installed with the latest **NeoForge** loader.
+2.  **Download**: Visit the Reglia Modrinth Page and download the latest version.
+3.  **Install**: Drop the \`.jar\` file into your Minecraft instance's \`mods\` folder.
+4.  **Launch**: Start the game. The config file will be generated automatically, but you'll need to configure the connection using in-game commands.
+
+## Configuration
+
+Reglia is designed to be configured entirely from within the game using the \`/set\` commands.
+
+### Commands
+
+| Command | Permission | Description |
+| :--- | :--- | :--- |
+| \`/setwebhook <url>\` | Admin (Level 2) | Sets the Discord Webhook URL for sending Minecraft chat **to** Discord. |
+| \`/setbottoken <token>\` | Owner (Level 4) | Sets the Discord Bot Token for receiving Discord chat **in** Minecraft. |
+| \`/setchannel <id>\` | Admin (Level 2) | (Optional) Restricts the bot to listen to a specific Discord channel ID. |
+| \`/discord status\` | Everyone | Checks the current connection status of the Webhook and Bot. |
+| \`/discord test\` | Admin (Level 2) | Sends a test message to Discord via the Webhook. |
+| \`/discord toggle\` | Admin (Level 2) | Temporarily enables or disables the bridge. |
+| \`/discord reconnect\` | Admin (Level 2) | Forces the Discord bot to reconnect. |
+
+> **Note**: \`/setbottoken\` requires operator level 4 permissions (server console or fully authorized operator) for security reasons.
+
+---
+
+## Discord Integration Setup
+
+To get Reglia working fully (sending AND receiving), you need to set up two things on Discord: a **Webhook** and a **Bot Application**.
+
+### Part 1: Setting up the Webhook (MC -> Discord)
+
+This allows Minecraft messages to appear in your Discord channel.
+
+1.  Open Discord and navigate to the text channel where you want Minecraft chat to appear.
+2.  Click the **Edit Channel** (gear icon) -> **Integrations** -> **Webhooks**.
+3.  Click **New Webhook**.
+4.  Name it "Reglia" (or whatever you prefer) and copy the **Webhook URL**.
+5.  In Minecraft, run:
+    \`\`\`
+    /setwebhook https://discord.com/api/webhooks/YOUR_WEBHOOK_URL_HERE
+    \`\`\`
+
+### Part 2: Setting up the Bot Token (Discord -> MC)
+
+This allows Discord messages to appear in Minecraft chat.
+
+1.  Go to the [Discord Developer Portal](https://discord.com/developers/applications).
+2.  Click **New Application** and give it a name (e.g., "Reglia Bridge").
+3.  Go to the **Bot** tab on the left sidebar.
+4.  **CRITICAL STEP**: Scroll down to **Privileged Gateway Intents** and enable **MESSAGE CONTENT INTENT**.
+    *   *Without this, the bot cannot read messages to send them to Minecraft!*
+5.  Scroll back up to the "Build-A-Bot" section and click **Reset Token**.
+6.  Copy the new token setup.
+7.  In Minecraft, run:
+    \`\`\`
+    /setbottoken YOUR_BOT_TOKEN_HERE
+    \`\`\`
+    *(Note: Be careful not to share this token with anyone!)*
+
+### Part 3: Channel Filtering (Optional)
+
+If your bot is in multiple channels or you want to be extra safe:
+
+1.  Enable **Developer Mode** in Discord (User Settings -> Advanced -> Developer Mode).
+2.  Right-click the text channel you are using and click **Copy Channel ID**.
+3.  In Minecraft, run:
+    \`\`\`
+    /setchannel YOUR_CHANNEL_ID_HERE
+    \`\`\`
+
+## Verification
+
+Once configured:
+1.  Run \`/discord status\` to see if your Webhook and Bot are connected.
+2.  Run \`/discord test\` to send a message to Discord.
+3.  Type in Discord and see if it appears in-game!
+`;
+
+        // --- Render and Navigation Logic ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const contentEl = document.getElementById('main-content');
+            const skeletonEl = document.getElementById('skeleton-loader');
+            const sidebarNav = document.getElementById('sidebar-nav');
+            const tocList = document.getElementById('toc-list');
+
+            // 1. Render Markdown
+            // Use marked to convert markdown to html
+            contentEl.innerHTML = marked.parse(guideMarkdown);
+
+            // 2. Process Headers for Sidebar and TOC
+            // We'll treat H1 as main sections (or just title) and H2 as main navigation items.
+            const headers = contentEl.querySelectorAll('h1, h2, h3');
+
+            // Wrapper for sidebar nav groups
+            let currentGroup = null;
+            let currentGroupList = null;
+
+            // Clear previous placeholder logic
+            sidebarNav.innerHTML = '';
+
+            headers.forEach((header, index) => {
+                // Add ID to header for linking
+                const id = header.textContent.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+                header.id = id;
+
+                // Sidebar Logic (H2s are main categories)
+                if (header.tagName === 'H2' || header.tagName === 'H1') {
+                    // Create new group container
+                    const groupDiv = document.createElement('div');
+                    groupDiv.className = 'mb-6';
+
+                    const title = document.createElement('p');
+                    title.className = "text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-2";
+                    title.textContent = header.textContent.replace(/^[^\w]+/, '').trim(); // Remove emojis for cleaner sidebar label if desired, or keep them.
+
+                    groupDiv.appendChild(title);
+
+                    const nav = document.createElement('nav');
+                    nav.className = "grid gap-1";
+                    groupDiv.appendChild(nav);
+
+                    sidebarNav.appendChild(groupDiv);
+
+                    currentGroup = nav; // Set as current target for sub-items if we had H3s in sidebar, though here we might just link H2s directly? 
+                    // Actually, typically H2s ARE the links in a sidebar for a simple doc. 
+                    // Let's make H2s the links themselves in the sidebar.
+
+                    // Resetting approach:
+                    // Sidebar: List H2s as main items.
+                    // TOC: List H1, H2, H3 hierarchically (or just H2/H3).
+                }
+            });
+
+            // Re-evaluating Sidebar strategy for this specific Guide.
+            // Guide has: Installation, Configuration, Discord Integration Setup, Verification.
+            // These are H2s.
+            // Let's make one "Guide" Section in Sidebar and list these H2s under it.
+
+            sidebarNav.innerHTML = `
+                <div class="mb-6">
+                    <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-2">On This Page</p>
+                    <nav class="grid gap-1" id="sidebar-links-container">
+                    </nav>
+                </div>
+            `;
+            const sidebarContainer = document.getElementById('sidebar-links-container');
+
+            headers.forEach(header => {
+                if (header.tagName === 'H2') {
+                    const id = header.id;
+                    const link = document.createElement('a');
+                    link.href = `#${id}`;
+                    // Base styles with left border for active state
+                    link.className = "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-all border-l-2 border-transparent";
+
+                    let iconName = 'hash';
+                    if (header.textContent.includes('Installation')) iconName = 'download';
+                    if (header.textContent.includes('Configuration')) iconName = 'settings';
+                    if (header.textContent.includes('Integration')) iconName = 'plug';
+                    if (header.textContent.includes('Verification')) iconName = 'check-circle';
+
+                    link.innerHTML = `<i data-lucide="${iconName}" class="h-4 w-4"></i> ${header.textContent}`;
+                    sidebarContainer.appendChild(link);
+                }
+            });
+
+            // TOC Logic (Right side)
+            headers.forEach(header => {
+                if (header.tagName === 'H2' || header.tagName === 'H3') {
+                    const li = document.createElement('li');
+                    const a = document.createElement('a');
+                    a.href = `#${header.id}`;
+                    a.className = "hover:text-foreground hover:underline underline-offset-4 transition-all block truncate";
+                    a.textContent = header.textContent;
+
+                    if (header.tagName === 'H3') {
+                        a.classList.add('pl-4'); // Indent H3
+                    }
+
+                    li.appendChild(a);
+                    tocList.appendChild(li);
+                }
+            });
+
+            // 3. Initialize Icons
+            lucide.createIcons();
+
+            // 4. Reveal Content
+            setTimeout(() => {
+                skeletonEl.style.display = 'none';
+                contentEl.classList.remove('skeleton-hidden');
+                contentEl.classList.add('loaded');
+            }, 300);
+
+            // 5. Tailwind Typography Adjustment for Tables
+            const tables = contentEl.querySelectorAll('table');
+            tables.forEach(table => {
+                // Remove existing wrapper if present to avoid duplication on re-runs (though this runs once)
+                // Wrap in div for overflow handling
+                const wrapper = document.createElement('div');
+                wrapper.className = "my-6 w-full overflow-y-auto";
+                table.parentNode.insertBefore(wrapper, table);
+                wrapper.appendChild(table);
+            });
+
+            // 6. Intersection Observer for Active State (Sidebar & TOC)
+            const observerOptions = {
+                root: null,
+                rootMargin: '-20% 0px -60% 0px',
+                threshold: 0
+            };
+
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.id;
+                        // Update Sidebar
+                        document.querySelectorAll('#sidebar nav a').forEach(link => {
+                            if (link.getAttribute('href') === `#${id}`) {
+                                link.classList.add('bg-accent', 'text-accent-foreground', 'border-primary');
+                                link.classList.remove('text-muted-foreground', 'border-transparent');
+                            } else {
+                                link.classList.remove('bg-accent', 'text-accent-foreground', 'border-primary');
+                                link.classList.add('text-muted-foreground', 'border-transparent');
+                            }
+                        });
+
+                        // Update TOC
+                        document.querySelectorAll('#toc-list a').forEach(link => {
+                            if (link.getAttribute('href') === `#${id}`) {
+                                link.classList.add('text-foreground', 'font-semibold');
+                                link.classList.remove('text-muted-foreground');
+                            } else {
+                                link.classList.remove('text-foreground', 'font-semibold');
+                                link.classList.add('text-muted-foreground');
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            headers.forEach(header => observer.observe(header));
+        });
+
+        // --- Dark Mode Logic (Preserved) ---
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            htmlElement.classList.add('dark');
+        } else {
+            htmlElement.classList.remove('dark');
+        }
+        themeToggleBtn.addEventListener('click', () => {
+            htmlElement.classList.toggle('dark');
+            const isDark = htmlElement.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+
+        // --- Mobile Menu Logic (Preserved) ---
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        function toggleMenu() {
+            const isOpen = !sidebar.classList.contains('-translate-x-full');
+            if (isOpen) {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+                setTimeout(() => overlay.classList.add('opacity-0'), 0);
+            } else {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+                requestAnimationFrame(() => overlay.classList.remove('opacity-0'));
+            }
+        }
+        mobileMenuBtn.addEventListener('click', toggleMenu);
+        overlay.addEventListener('click', toggleMenu);
+    </script>
+</body>
+
+</html>
